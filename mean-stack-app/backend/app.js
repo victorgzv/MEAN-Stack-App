@@ -44,11 +44,12 @@ app.post("/api/posts", (req, res, next) => {
   });
 });
 
-app.use("/api/posts", (req, res, next) => {
-  const posts = [];
-  res.status(200).json({
-    message: "Post fetched successfully",
-    posts: posts,
+app.get("/api/posts", (req, res, next) => {
+  Post.find().then((documents) => {
+    res.status(200).json({
+      message: "Post fetched successfully",
+      posts: documents,
+    });
   });
 });
 
