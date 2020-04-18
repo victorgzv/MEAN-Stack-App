@@ -6,7 +6,7 @@ const Post = require("./models/post");
 const app = express();
 moongose
   .connect(
-    "mongodb+srv://vic:miNNzlmsq7ySM5EN@cluster0-wvjy0.mongodb.net/test?retryWrites=true&w=majority",
+    "mongodb+srv://vic:miNNzlmsq7ySM5EN@cluster0-wvjy0.mongodb.net/node-angular?retryWrites=true&w=majority",
     { useNewUrlParser: true }
   )
   .then(() => {
@@ -33,7 +33,11 @@ app.use((req, res, next) => {
 });
 
 app.post("/api/posts", (req, res, next) => {
-  const post = new Post({ title: req.body.title, content: req.body.content });
+  const post = new Post({
+    title: req.body.title,
+    content: req.body.content,
+  });
+  post.save();
   console.log(post);
   res.status(201).json({
     message: "Post added successfully",
@@ -41,18 +45,7 @@ app.post("/api/posts", (req, res, next) => {
 });
 
 app.use("/api/posts", (req, res, next) => {
-  const posts = [
-    {
-      id: "fdgad2",
-      title: "First dummy server-side title",
-      content: "some content coming from the server",
-    },
-    {
-      id: "fefe2",
-      title: "Second dummy server-side title",
-      content: "some content",
-    },
-  ];
+  const posts = [];
   res.status(200).json({
     message: "Post fetched successfully",
     posts: posts,
