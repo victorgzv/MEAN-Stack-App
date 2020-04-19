@@ -23,26 +23,30 @@ const storage = multer.diskStorage({
     cb(null, name + Date.now() + "." + ext);
   },
 });
-router.post("", multer({storage: storage}).single("image"), (req, res, next) => {
-  const url = req.protocol + '://' + req.get("host")
-  const post = new Post({
-    title: req.body.title,
-    content: req.body.content,
-    imagePath: url + "/images/" + req.file.filename
-  });
-  post.save().then((createdPost) => {
-    res.status(201).json({
-      message: "Post added successfully",
-      post: {
-        id: createdPost._id,
-        //The following 3 lines could be replaces using the spread operator e.g. ...createdPost
-        title: createdPost.title,
-        content: createdPost.content,
-        imagePath: createdPost.imagePath
-      }
+router.post(
+  "",
+  multer({ storage: storage }).single("image"),
+  (req, res, next) => {
+    const url = req.protocol + "://" + req.get("host");
+    const post = new Post({
+      title: req.body.title,
+      content: req.body.content,
+      imagePath: url + "/images/" + req.file.filename,
     });
-  });
-});
+    post.save().then((createdPost) => {
+      res.status(201).json({
+        message: "Post added successfully",
+        post: {
+          id: createdPost._id,
+          //The following 3 lines could be replaces using the spread operator e.g. ...createdPost
+          title: createdPost.title,
+          content: createdPost.content,
+          imagePath: createdPost.imagePath,
+        },
+      });
+    });
+  }
+);
 
 router.get("", (req, res, next) => {
   Post.find().then((documents) => {
@@ -71,17 +75,34 @@ router.delete("/:id", (req, res, next) => {
   });
 });
 
-router.put("/:id", (req, res, next) => {
-  Post.update({
-    _id: req.params.id,
-    title: req.body.title,
-    content: req.body.content,
-  }).then((updatedPost) => {
-    console.log(updatedPost);
-    res.status(201).json({
-      message: "Post updated successfully",
+router.put(
+  "/:id",
+  multer({ storage: storage }).single("image"),
+  (req, res, next) => {
+    let imagePath = req.body.imagePahth;
+    if (req.file) {
+      const url = req.protocol + "://" + req.get("host");
+      imagePath = url + "/images/" + req.file.filename;
+    }
+    Post.update({
+      _id: req.params.id,
+      title: req.body.title,
+      content: req.body.content,
+      imagePath: imagePath,
+    }).then((updatedPost) => {
+      console.log(updatedPost);
+      res.status(201).json({
+        message: "Post updated successfully",
+        post: {
+          id: updatedPost._id,
+          //The following 3 lines could be replaces using the spread operator e.g. ...createdPost
+          title: updatedPost.title,
+          content: updatedPost.content,
+          imagePath: updatedPost.imagePath,
+        },
+      });
     });
-  });
-});
+  }
+);
 
 module.exports = router;
