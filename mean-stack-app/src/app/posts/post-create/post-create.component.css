@@ -1,7 +1,9 @@
 mat-card {
   margin-top: 1rem;
 }
-
+mat-spinner {
+  margin: auto;
+}
 mat-form-field,
 textarea {
   width: 100%;
