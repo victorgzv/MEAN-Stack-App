@@ -38,7 +38,7 @@ router.post(
         message: "Post added successfully",
         post: {
           id: createdPost._id,
-          //The following 3 lines could be replaces using the spread operator e.g. ...createdPost
+          //The following 3 lines could be replaced using the spread operator e.g. ...createdPost
           title: createdPost.title,
           content: createdPost.content,
           imagePath: createdPost.imagePath,
@@ -79,7 +79,7 @@ router.put(
   "/:id",
   multer({ storage: storage }).single("image"),
   (req, res, next) => {
-    let imagePath = req.body.imagePahth;
+    let imagePath = req.body.imagePath;
     if (req.file) {
       const url = req.protocol + "://" + req.get("host");
       imagePath = url + "/images/" + req.file.filename;
