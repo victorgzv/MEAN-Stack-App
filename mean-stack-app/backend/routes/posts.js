@@ -59,13 +59,13 @@ router.get("", (req, res, next) => {
   postQuery
     .then((documents) => {
       fetchedPosts = documents;
-      return Post.count();
+      return Post.estimatedDocumentCount();
     })
     .then((count) => {
       res.status(200).json({
         message: "Post fetched successfully",
         posts: fetchedPosts,
-        maxPost: count,
+        maxPosts: count,
       });
     });
 });
