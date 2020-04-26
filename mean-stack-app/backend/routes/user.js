@@ -4,12 +4,13 @@ const bcrypt = require("bcrypt");
 const User = require("../models/user");
 
 router.post("/signup", (req, res, next) => {
+  console.log("called");
   bcrypt.hash(req.body.password, 10).then((hash) => {
-    const User = new User({
+    const user = new User({
       email: req.body.email,
       password: hash,
     });
-    User.save()
+    user.save()
       .then((result) => {
         res.status(201).json({
           message: "User created successfully",
