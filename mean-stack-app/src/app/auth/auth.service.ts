@@ -9,7 +9,12 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class AuthService {
+  private token: string;
   constructor(private http: HttpClient) {}
+
+  getToken() {
+    return this.token;
+  }
 
   addUser(email: string, password: string) {
     const authData: AuthData = {
@@ -29,9 +34,10 @@ export class AuthService {
       password: password,
     };
     this.http
-      .post('http://localhost:3000/api/user/login', authData)
+      .post<{ token: string }>('http://localhost:3000/api/user/login', authData)
       .subscribe((responseData) => {
-        console.log(responseData);
+        const token = responseData.token;
+        this.token = token;
       });
   }
 }
